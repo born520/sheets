@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Grid Layout</title>
+    <title>Instagram Embed Adjustment</title>
     <style>
         body {
             display: flex;
@@ -13,50 +13,59 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: #f0f0f0; /* 페이지 배경색 설정 */
+            background: #f0f0f0;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(5, 1fr);
             grid-gap: 10px;
             width: 100%;
-            max-width: 960px; /* 최대 너비 조정 */
+            max-width: 1200px;
             padding: 20px;
             box-sizing: border-box;
         }
         .grid-item {
-            background: #fff; /* 아이템 배경색 */
             border: 1px solid #ddd;
-            border-radius: 8px; /* 테두리 둥글게 */
+            border-radius: 5px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
+            position: relative;
             box-sizing: border-box;
+            background-color: #fff;
         }
         .instagram-media {
             width: 100%;
-            height: auto; /* 높이 자동 조정 */
+            height: auto; /* Ensure the height adjusts to the content */
+            box-sizing: border-box;
         }
-        .details {
-            font-size: 14px;
-            color: #666;
-            padding: 5px 0; /* 상하 패딩 */
+
+        /* Mobile view - 1 column layout */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="grid" id="grid-container">
-        <!-- Instagram embeds will be inserted here -->
+        <!-- Placeholder for Instagram embeds -->
     </div>
 
-    <script async src="https://www.instagram.com/embed.js"></script>
+    <script async src="//www.instagram.com/embed.js"></script>
     <script>
-        // Here you would initialize your grid
-        // For demo purposes, the actual initialization script isn't shown
-        // You should replace it with your script to fetch and embed Instagram content
+        // Assuming your script to fetch and inject embeds goes here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example Instagram post
+            const embedHtml = `
+                <div class="grid-item">
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/YourPost/" data-instgrm-version="12"></blockquote>
+                </div>
+            `;
+
+            const container = document.querySelector('.grid');
+            container.innerHTML = embedHtml;
+            instgrm.Embeds.process(); // This processes all Instagram embed scripts
+        });
     </script>
 </body>
 </html>
