@@ -48,4 +48,60 @@
 <body>
 
     <div class="grid" id="grid-container">
-        <!-- Instagram embeds wi
+        <!-- Instagram embeds will be inserted here -->
+    </div>
+
+    <script>
+        // Google Sheets API Key and Spreadsheet ID
+        const API_KEY = 'AIzaSyCLNlQa8t8VSBiLkDEXIB5B1AW_MkfnOQ8';
+        const SPREADSHEET_ID = '1Ykif54vquofU2Hycg-dgmM3pL1U0yVJeUG1wty0oj5w';
+        const RANGE = 'A:A'; // 범위를 A:A로 설정하여 첫 번째 열의 모든 데이터를 가져옵니다.
+
+        async function fetchInstagramLinks() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Fetched data:', data);
+                return data.values ? data.values.flat() : [];
+            } catch (error) {
+                console.error('API 요청 실패:', error);
+                return [];
+            }
+        }
+
+        function createInstagramEmbed(url) {
+            console.log('Creating embed for URL:', url);
+            const container = document.createElement('div');
+            container.className = 'grid-item';
+            container.innerHTML = `
+                <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="12">
+                    <a href="${url}" target="_blank">Instagram Post</a>
+                </blockquote>
+            `;
+            return container;
+        }
+
+        async function initializeGrid() {
+            const container = document.getElementById('grid-container');
+            const links = await fetchInstagramLinks();
+            console.log('Links:', links);
+            links.forEach(link => {
+                const embed = createInstagramEmbed(link);
+                container.appendChild(embed);
+            });
+            // Reinitialize Instagram embeds
+            setTimeout(() => {
+                if (typeof instgrm !== 'undefined') {
+                    instgrm.Embeds.process();
+                }
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeGrid);
+    </script>
+</body>
+</html>
