@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Image Gallery</title>
+    <title>Instagram Embed Gallery</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,20 +14,19 @@
             margin: 0;
             padding: 20px;
         }
-        .image-card {
+        .embed-card {
             background-color: white;
-            width: 300px;
+            width: 100%;
+            max-width: 500px;
             margin: 10px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        .image-card img {
-            width: 100%;
-            height: auto;
-        }
-        .image-card .description {
-            padding: 10px;
+        @media (min-width: 768px) {
+            .embed-card {
+                width: 48%;
+            }
         }
     </style>
 </head>
@@ -49,27 +48,33 @@
 
                 // Skip header row and iterate over rows
                 for (let i = 1; i < rows.length; i++) {
-                    const imageUrl = rows[i][0]; // Assuming the image URL is in the first column
-                    const description = rows[i][1] || ''; // Assuming description is in the second column
-                    
-                    // Create image card
+                    const instagramLink = rows[i][0]; // Assuming the Instagram link is in the first column
+
+                    // Create embed card
                     const card = document.createElement('div');
-                    card.className = 'image-card';
+                    card.className = 'embed-card';
 
-                    const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.alt = description;
+                    // Create Instagram embed code
+                    const embed = document.createElement('iframe');
+                    embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
+                    embed.width = "100%";
+                    embed.height = "480";
+                    embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+                    embed.allowFullscreen = true;
+                    embed.style.border = "none";
 
-                    const desc = document.createElement('div');
-                    desc.className = 'description';
-                    desc.textContent = description;
-
-                    card.appendChild(img);
-                    card.appendChild(desc);
+                    card.appendChild(embed);
                     gallery.appendChild(card);
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
+
+        // Function to extract Instagram post ID from URL
+        function getInstagramID(url) {
+            const regex = /\/p\/([^\/]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : '';
+        }
     </script>
 </body>
 </html>
