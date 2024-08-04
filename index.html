@@ -15,31 +15,20 @@
         }
         #gallery {
             width: 100%;
-            max-width: 1200px;
+            max-width: 800px; /* 1열로 배치 */
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 20px;
         }
         .video-card {
             background-color: white;
-            width: calc(50% - 20px); /* 두 열로 배치, 20px 간격 */
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
         }
         iframe {
             width: 100%;
             border: none;
-            min-height: 400px;
-            flex-grow: 1;
-        }
-        @media (max-width: 768px) {
-            .video-card {
-                width: 100%; /* 모바일에서는 1열로 */
-            }
         }
     </style>
 </head>
@@ -48,7 +37,7 @@
 
     <script>
         // Apps Script 웹 앱 URL
-        const apiUrl = 'https://script.google.com/macros/s/AKfycby6Mu29K7rdTXJAPlfn7QeEUx_jrWHstBeLhr3dGVGHuuqAUO2A074_R3daA2GvSzAxPQ/exec';
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbwegS_arPFcNoQmQgUJf301223hjploPd3jyg8c9WTFIK4q-F8IbI5TtTkxS946tMAaVw/exec';
 
         // Fetch data from Google Apps Script
         async function fetchData() {
@@ -96,8 +85,10 @@
 
                 // Adjust iframe height based on Instagram post content
                 embed.onload = function() {
-                    const postHeight = embed.contentWindow.document.body.scrollHeight;
-                    embed.style.height = postHeight + 'px';
+                    setTimeout(() => {
+                        const postHeight = embed.contentWindow.document.body.scrollHeight;
+                        embed.style.height = postHeight + 'px';
+                    }, 1000);
                 };
             });
         }
