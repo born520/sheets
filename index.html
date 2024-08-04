@@ -7,31 +7,31 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
             background-color: #f0f0f0;
             margin: 0;
             padding: 20px;
         }
+        #gallery {
+            column-count: 2; /* 기본적으로 2열 */
+            column-gap: 20px; /* 열 간의 간격 */
+        }
         .video-card {
             background-color: white;
-            width: 100%;
-            max-width: 500px;
-            margin: 10px;
+            margin-bottom: 20px; /* 카드 간의 간격 */
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-        }
-        @media (min-width: 768px) {
-            .video-card {
-                width: 48%;
-            }
+            break-inside: avoid; /* 카드가 중간에 나뉘지 않도록 설정 */
         }
         iframe {
             width: 100%;
             height: 280px;
             border: none;
+        }
+        @media (max-width: 768px) {
+            #gallery {
+                column-count: 1; /* 모바일에서는 1열로 */
+            }
         }
     </style>
 </head>
@@ -91,11 +91,4 @@
         function getYouTubeID(url) {
             const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
             const match = url.match(regex);
-            return match ? match[1] : '';
-        }
-
-        // Call renderGallery to display the videos
-        renderGallery();
-    </script>
-</body>
-</html>
+            
