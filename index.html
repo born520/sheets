@@ -18,7 +18,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             grid-gap: 10px;
-            width: 80%;
+            width: 100%;
             max-width: 1200px;
             padding: 20px;
             box-sizing: border-box;
@@ -30,12 +30,20 @@
             position: relative;
             box-sizing: border-box;
             padding: 10px;
+            background-color: #fff;
         }
         .instagram-media {
             width: 100%;
             max-width: 540px;
             margin: 0 auto;
             box-sizing: border-box;
+        }
+
+        /* 모바일 환경에서 1열로 표시 */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr; /* 1열로 변경 */
+            }
         }
     </style>
     <script async src="https://www.instagram.com/embed.js"></script>
