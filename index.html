@@ -32,13 +32,11 @@
         .instagram-media {
             width: 100%;
         }
-        /* Hide unnecessary elements using CSS */
-        .instagram-media a[href*="://www.instagram.com"] {
-            display: none !important;
-        }
-        .instagram-media .content,
-        .instagram-media .caption {
-            display: block !important;
+        /* "프로필 보기" 버튼 크기 조정 */
+        .instagram-media a[href^="https://www.instagram.com/"] {
+            font-size: 12px !important; /* 글자 크기 조정 */
+            padding: 5px 10px !important; /* 여백 조정 */
+            margin: 0 !important; /* 외부 여백 제거 */
         }
     </style>
     <script async src="https://www.instagram.com/embed.js"></script>
@@ -92,29 +90,6 @@
             });
             // Reinitialize Instagram embeds
             instgrm.Embeds.process();
-
-            // Hide unwanted elements after embeds are processed
-            setTimeout(hideUnwantedElements, 2000); // Delay to ensure all elements are loaded
-        }
-
-        function hideUnwantedElements() {
-            const instagramEmbeds = document.querySelectorAll('.instagram-media');
-            instagramEmbeds.forEach(embed => {
-                // Hide unnecessary elements
-                const unwantedLinks = embed.querySelectorAll('a');
-                unwantedLinks.forEach(link => {
-                    if (!link.href.includes('/p/')) {
-                        link.style.display = 'none';
-                    }
-                });
-
-                const unwantedSpans = embed.querySelectorAll('span');
-                unwantedSpans.forEach(span => {
-                    if (!span.classList.contains('caption')) {
-                        span.style.display = 'none';
-                    }
-                });
-            });
         }
 
         document.addEventListener('DOMContentLoaded', initializeGrid);
