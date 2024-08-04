@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Embed Gallery</title>
+    <title>YouTube Video Gallery</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
             margin: 0;
             padding: 20px;
         }
-        .embed-card {
+        .video-card {
             background-color: white;
             width: 100%;
             max-width: 500px;
@@ -24,9 +24,14 @@
             overflow: hidden;
         }
         @media (min-width: 768px) {
-            .embed-card {
+            .video-card {
                 width: 48%;
             }
+        }
+        iframe {
+            width: 100%;
+            height: 280px;
+            border: none;
         }
     </style>
 </head>
@@ -35,9 +40,9 @@
 
     <script>
         // Google Spreadsheet ID and API Key
-        const sheetID = '1Ykif54vquofU2Hycg-dgmM3pL1U0yVJeUG1wty0oj5w'; // 제공된 스프레드시트 ID
+        const sheetID = '1a6yftTeoxpznGNu3lhU0SRvPxTYdz_wNRpesvGt18mU'; // 제공된 스프레드시트 ID
         const sheetName = 'Sheet1';  // 시트 이름
-        const apiKey = 'AIzaSyCLNlQa8t8VSBiLkDEXIB5B1AW_MkfnOQ8'; // 제공된 Google API 키
+        const apiKey = 'AIzaSyCG1NFjt0DAwuWzapPzbz4-tLjPRfArFjw'; // 제공된 유튜브 API 키
 
         // Fetch data from Google Sheets
         async function fetchData() {
@@ -54,7 +59,7 @@
             }
         }
 
-        // Render Instagram embed links
+        // Render YouTube videos
         async function renderGallery() {
             const rows = await fetchData();
             if (!rows || rows.length < 2) {
@@ -66,39 +71,36 @@
 
             // Skip header row and iterate over rows
             for (let i = 1; i < rows.length; i++) {
-                const instagramLink = rows[i][0]; // Assuming the Instagram link is in the first column
+                const youtubeLink = rows[i][0]; // Assuming the YouTube link is in the first column
 
-                if (!instagramLink || !instagramLink.includes('instagram.com')) {
-                    console.warn('Invalid Instagram URL:', instagramLink);
+                if (!youtubeLink || !youtubeLink.includes('youtube.com')) {
+                    console.warn('Invalid YouTube URL:', youtubeLink);
                     continue;
                 }
 
-                // Create embed card
+                // Create video card
                 const card = document.createElement('div');
-                card.className = 'embed-card';
+                card.className = 'video-card';
 
-                // Create Instagram embed code
+                // Create YouTube embed code
                 const embed = document.createElement('iframe');
-                embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
-                embed.width = "100%";
-                embed.height = "480";
-                embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+                embed.src = `https://www.youtube.com/embed/${getYouTubeID(youtubeLink)}`;
+                embed.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
                 embed.allowFullscreen = true;
-                embed.style.border = "none";
 
                 card.appendChild(embed);
                 gallery.appendChild(card);
             }
         }
 
-        // Function to extract Instagram post ID from URL
-        function getInstagramID(url) {
-            const regex = /\/p\/([^\/]+)/;
+        // Function to extract YouTube video ID from URL
+        function getYouTubeID(url) {
+            const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
             const match = url.match(regex);
             return match ? match[1] : '';
         }
 
-        // Call renderGallery to display the images
+        // Call renderGallery to display the videos
         renderGallery();
     </script>
 </body>
