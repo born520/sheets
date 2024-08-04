@@ -16,7 +16,7 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(5, 1fr);
             grid-gap: 10px;
             width: 100%;
             max-width: 1200px;
@@ -34,7 +34,7 @@
         }
         .instagram-media {
             width: 100%;
-            max-width: 540px;
+            max-width: 100%;
             margin: 0 auto;
             box-sizing: border-box;
         }
@@ -70,34 +70,4 @@
                 const data = await response.json();
                 return data.values ? data.values.flat() : [];
             } catch (error) {
-                console.error('API 요청 실패:', error);
-                return [];
-            }
-        }
-
-        function createInstagramEmbed(url) {
-            const container = document.createElement('div');
-            container.className = 'grid-item';
-            container.innerHTML = `
-                <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="12">
-                    <a href="${url}" target="_blank">Instagram Post</a>
-                </blockquote>
-            `;
-            return container;
-        }
-
-        async function initializeGrid() {
-            const container = document.getElementById('grid-container');
-            const links = await fetchInstagramLinks();
-            links.forEach(link => {
-                const embed = createInstagramEmbed(link);
-                container.appendChild(embed);
-            });
-            // Reinitialize Instagram embeds
-            instgrm.Embeds.process();
-        }
-
-        document.addEventListener('DOMContentLoaded', initializeGrid);
-    </script>
-</body>
-</html>
+                
