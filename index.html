@@ -32,6 +32,14 @@
         .instagram-media {
             width: 100%;
         }
+        /* Hide unnecessary elements using CSS */
+        .instagram-media a[href*="://www.instagram.com"] {
+            display: none !important;
+        }
+        .instagram-media .content,
+        .instagram-media .caption {
+            display: block !important;
+        }
     </style>
     <script async src="https://www.instagram.com/embed.js"></script>
 </head>
@@ -92,21 +100,17 @@
         function hideUnwantedElements() {
             const instagramEmbeds = document.querySelectorAll('.instagram-media');
             instagramEmbeds.forEach(embed => {
-                // Hide specific links
-                const linksToHide = embed.querySelectorAll('a');
-                linksToHide.forEach(link => {
-                    if (link.textContent.includes('프로필 보기') || 
-                        link.textContent.includes('Instagram에서 더 보기') || 
-                        link.textContent.includes('댓글 달기')) {
+                // Hide unnecessary elements
+                const unwantedLinks = embed.querySelectorAll('a');
+                unwantedLinks.forEach(link => {
+                    if (!link.href.includes('/p/')) {
                         link.style.display = 'none';
                     }
                 });
-                // Optionally, hide any spans that match certain criteria
-                const spansToHide = embed.querySelectorAll('span');
-                spansToHide.forEach(span => {
-                    if (span.textContent.includes('프로필 보기') || 
-                        span.textContent.includes('Instagram에서 더 보기') || 
-                        span.textContent.includes('댓글 달기')) {
+
+                const unwantedSpans = embed.querySelectorAll('span');
+                unwantedSpans.forEach(span => {
+                    if (!span.classList.contains('caption')) {
                         span.style.display = 'none';
                     }
                 });
