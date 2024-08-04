@@ -29,13 +29,10 @@
             overflow: hidden;
             position: relative;
             box-sizing: border-box;
-            padding: 10px;
             background-color: #fff;
         }
         .instagram-media {
             width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
             box-sizing: border-box;
         }
 
@@ -51,23 +48,4 @@
 <body>
 
     <div class="grid" id="grid-container">
-        <!-- Instagram embeds will be inserted here -->
-    </div>
-
-    <script>
-        // Google Sheets API Key and Spreadsheet ID
-        const API_KEY = 'AIzaSyCLNlQa8t8VSBiLkDEXIB5B1AW_MkfnOQ8';
-        const SPREADSHEET_ID = '1Ykif54vquofU2Hycg-dgmM3pL1U0yVJeUG1wty0oj5w';
-        const RANGE = 'A:A'; // 범위를 A:A로 설정하여 첫 번째 열의 모든 데이터를 가져옵니다.
-
-        async function fetchInstagramLinks() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                return data.values ? data.values.flat() : [];
-            } catch (error) {
-                
+        <!-- Instagram embeds wi
