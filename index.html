@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram Gallery</title>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,23 +17,21 @@
             align-items: center;
             min-height: 100vh;
         }
-        #gallery {
+        .swiper-container {
             width: 100%;
             max-width: 800px; /* 최대 너비 설정 */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            height: auto;
             padding: 20px;
             box-sizing: border-box;
         }
-        .video-card {
+        .swiper-slide {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            width: 100%; /* 카드가 부모 컨테이너에 맞게 */
             display: flex;
             justify-content: center;
+            align-items: center;
         }
         iframe {
             width: 100%;
@@ -40,8 +41,19 @@
     </style>
 </head>
 <body>
-    <div id="gallery" class="loading">Loading...</div>
+    <div class="swiper-container">
+        <div class="swiper-wrapper" id="gallery">
+            <!-- Slides will be added here dynamically -->
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Navigation -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
 
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
         // 업데이트된 Apps Script 웹 앱 URL
         const apiUrl = 'https://script.google.com/macros/s/AKfycby6Mu29K7rdTXJAPlfn7QeEUx_jrWHstBeLhr3dGVGHuuqAUO2A074_R3daA2GvSzAxPQ/exec';
@@ -62,7 +74,6 @@
         // Render Instagram posts
         async function renderGallery() {
             const gallery = document.getElementById('gallery');
-            gallery.classList.remove('loading'); // 로딩 클래스 제거
 
             const cachedData = JSON.parse(localStorage.getItem('instagramData')) || [];
             if (cachedData.length > 0) {
@@ -92,9 +103,9 @@
                     return;
                 }
 
-                // Create video card
-                const card = document.createElement('div');
-                card.className = 'video-card';
+                // Create swiper slide
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
 
                 // Create Instagram embed code
                 const embed = document.createElement('iframe');
@@ -103,8 +114,23 @@
                 embed.allowFullscreen = true;
                 embed.scrolling = "no";
 
-                card.appendChild(embed);
-                gallery.appendChild(card);
+                slide.appendChild(embed);
+                gallery.appendChild(slide);
+            });
+
+            // Initialize Swiper after slides are added
+            new Swiper('.swiper-container', {
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                slidesPerView: 1, // 한 번에 하나의 슬라이드
+                spaceBetween: 20, // 슬라이드 사이의 간격
             });
         }
 
