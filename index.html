@@ -32,13 +32,6 @@
         .instagram-media {
             width: 100%;
         }
-        /* CSS를 사용하여 '프로필 보기', '댓글 달기...', 'Instagram에서 더 보기' 숨기기 */
-        .instagram-media a {
-            display: none !important;
-        }
-        .instagram-media span {
-            display: none !important;
-        }
     </style>
     <script async src="https://www.instagram.com/embed.js"></script>
 </head>
@@ -91,6 +84,33 @@
             });
             // Reinitialize Instagram embeds
             instgrm.Embeds.process();
+
+            // Hide unwanted elements after embeds are processed
+            setTimeout(hideUnwantedElements, 2000); // Delay to ensure all elements are loaded
+        }
+
+        function hideUnwantedElements() {
+            const instagramEmbeds = document.querySelectorAll('.instagram-media');
+            instagramEmbeds.forEach(embed => {
+                // Hide specific links
+                const linksToHide = embed.querySelectorAll('a');
+                linksToHide.forEach(link => {
+                    if (link.textContent.includes('프로필 보기') || 
+                        link.textContent.includes('Instagram에서 더 보기') || 
+                        link.textContent.includes('댓글 달기')) {
+                        link.style.display = 'none';
+                    }
+                });
+                // Optionally, hide any spans that match certain criteria
+                const spansToHide = embed.querySelectorAll('span');
+                spansToHide.forEach(span => {
+                    if (span.textContent.includes('프로필 보기') || 
+                        span.textContent.includes('Instagram에서 더 보기') || 
+                        span.textContent.includes('댓글 달기')) {
+                        span.style.display = 'none';
+                    }
+                });
+            });
         }
 
         document.addEventListener('DOMContentLoaded', initializeGrid);
