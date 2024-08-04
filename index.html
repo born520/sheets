@@ -15,7 +15,7 @@
         }
         #gallery {
             width: 100%;
-            max-width: 600px; /* 최대 너비를 설정하여 콘텐츠가 과도하게 늘어나지 않도록 합니다. */
+            max-width: 600px; /* 최대 너비 설정 */
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -46,6 +46,59 @@
             try {
                 const response = await fetch(apiUrl);
                 const data = await response.json();
+                console.log('Data fetched:', data); // 데이터 로그 확인
                 return data;
             } catch (error) {
-                console.error('Error
+                console.error('Error fetching data:', error);
+                return null;
+            }
+        }
+
+        // Render Instagram posts
+        async function renderGallery() {
+            const data = await fetchData();
+            if (!data || data.length === 0) {
+                console.error('No data found or incorrect data format.');
+                return;
+            }
+
+            const gallery = document.getElementById('gallery');
+
+            data.forEach(item => {
+                const instagramLink = item.link;
+
+                if (!instagramLink || !instagramLink.includes('instagram.com')) {
+                    console.warn('Invalid Instagram URL:', instagramLink);
+                    return;
+                }
+
+                console.log('Valid Instagram URL:', instagramLink); // 유효한 URL 로그 확인
+
+                // Create video card
+                const card = document.createElement('div');
+                card.className = 'video-card';
+
+                // Create Instagram embed code
+                const embed = document.createElement('iframe');
+                embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
+                embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+                embed.allowFullscreen = true;
+                embed.scrolling = "no";
+
+                card.appendChild(embed);
+                gallery.appendChild(card);
+            });
+        }
+
+        // Function to extract Instagram post ID from URL
+        function getInstagramID(url) {
+            const regex = /\/p\/([^\/?]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : '';
+        }
+
+        // Call renderGallery to display the posts
+        renderGallery();
+    </script>
+</body>
+</html>
