@@ -34,30 +34,38 @@
             border: none;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
 </head>
 <body>
     <div id="gallery"></div>
 
     <script>
-        // Google Spreadsheet ID
-        const sheetID = '1a6yftTeoxpznGNu3lhU0SRvPxTYdz_wNRpesvGt18mU'; // 제공된 스프레드시트 ID
+        // Apps Script 웹 앱 URL
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbwegS_arPFcNoQmQgUJf301223hjploPd3jyg8c9WTFIK4q-F8IbI5TtTkxS946tMAaVw/exec';
 
-        // Fetch data from Google Sheets using Tabletop.js
-        function fetchData() {
-            Tabletop.init({
-                key: sheetID,
-                callback: renderGallery,
-                simpleSheet: true
-            });
+        // Fetch data from Google Apps Script
+        async function fetchData() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return null;
+            }
         }
 
         // Render YouTube videos
-        function renderGallery(data) {
+        async function renderGallery() {
+            const data = await fetchData();
+            if (!data || data.length === 0) {
+                console.error('No data found or incorrect data format.');
+                return;
+            }
+
             const gallery = document.getElementById('gallery');
 
-            data.forEach(row => {
-                const youtubeLink = row['YouTube Link']; // Assuming the column header is "YouTube Link"
+            data.forEach(item => {
+                const youtubeLink = item.link;
 
                 if (!youtubeLink || !youtubeLink.includes('youtube.com')) {
                     console.warn('Invalid YouTube URL:', youtubeLink);
@@ -86,8 +94,8 @@
             return match ? match[1] : '';
         }
 
-        // Call fetchData to load the data and render the gallery
-        fetchData();
+        // Call renderGallery to display the videos
+        renderGallery();
     </script>
 </body>
 </html>
