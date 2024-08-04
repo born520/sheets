@@ -15,7 +15,7 @@
         }
         #gallery {
             width: 100%;
-            max-width: 800px; /* 1열로 배치 */
+            max-width: 600px; /* 1열로 배치 */
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -25,6 +25,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            width: 100%; /* 카드가 부모 컨테이너에 맞게 */
         }
         iframe {
             width: 100%;
@@ -38,7 +39,7 @@
 
     <script>
         // Apps Script 웹 앱 URL
-        const apiUrl = 'https://script.google.com/macros/s/AKfycby6Mu29K7rdTXJAPlfn7QeEUx_jrWHstBeLhr3dGVGHuuqAUO2A074_R3daA2GvSzAxPQ/exec';
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbwegS_arPFcNoQmQgUJf301223hjploPd3jyg8c9WTFIK4q-F8IbI5TtTkxS946tMAaVw/exec';
 
         // Fetch data from Google Apps Script
         async function fetchData() {
@@ -76,25 +77,4 @@
 
                 // Create Instagram embed code
                 const embed = document.createElement('iframe');
-                embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
-                embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
-                embed.allowFullscreen = true;
-                embed.scrolling = "no";
-
-                card.appendChild(embed);
-                gallery.appendChild(card);
-            });
-        }
-
-        // Function to extract Instagram post ID from URL
-        function getInstagramID(url) {
-            const regex = /\/p\/([^\/?]+)/;
-            const match = url.match(regex);
-            return match ? match[1] : '';
-        }
-
-        // Call renderGallery to display the posts
-        renderGallery();
-    </script>
-</body>
-</html>
+                embed.src = `https://www.instagram.com/p/$
