@@ -15,7 +15,7 @@
         }
         #gallery {
             width: 100%;
-            max-width: 600px; /* 1열로 배치 */
+            max-width: 600px; /* 최대 너비를 설정하여 콘텐츠가 과도하게 늘어나지 않도록 합니다. */
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -38,7 +38,7 @@
     <div id="gallery"></div>
 
     <script>
-        // Apps Script 웹 앱 URL
+        // 업데이트된 Apps Script 웹 앱 URL
         const apiUrl = 'https://script.google.com/macros/s/AKfycby6Mu29K7rdTXJAPlfn7QeEUx_jrWHstBeLhr3dGVGHuuqAUO2A074_R3daA2GvSzAxPQ/exec';
 
         // Fetch data from Google Apps Script
@@ -48,33 +48,4 @@
                 const data = await response.json();
                 return data;
             } catch (error) {
-                console.error('Error fetching data:', error);
-                return null;
-            }
-        }
-
-        // Render Instagram posts
-        async function renderGallery() {
-            const data = await fetchData();
-            if (!data || data.length === 0) {
-                console.error('No data found or incorrect data format.');
-                return;
-            }
-
-            const gallery = document.getElementById('gallery');
-
-            data.forEach(item => {
-                const instagramLink = item.link;
-
-                if (!instagramLink || !instagramLink.includes('instagram.com')) {
-                    console.warn('Invalid Instagram URL:', instagramLink);
-                    return;
-                }
-
-                // Create video card
-                const card = document.createElement('div');
-                card.className = 'video-card';
-
-                // Create Instagram embed code
-                const embed = document.createElement('iframe');
-                embed.src = `https://www.instagram.com/p/$
+                console.error('Error
