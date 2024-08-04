@@ -26,10 +26,15 @@
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
         iframe {
             width: 100%;
             border: none;
+            min-height: 400px;
+            flex-grow: 1;
         }
         @media (max-width: 768px) {
             .video-card {
@@ -82,17 +87,18 @@
                 // Create Instagram embed code
                 const embed = document.createElement('iframe');
                 embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
-                embed.onload = function() {
-                    // Set iframe height based on content height
-                    setTimeout(() => {
-                        embed.style.height = embed.contentWindow.document.body.scrollHeight + 'px';
-                    }, 1000);
-                };
                 embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
                 embed.allowFullscreen = true;
+                embed.scrolling = "no";
 
                 card.appendChild(embed);
                 gallery.appendChild(card);
+
+                // Adjust iframe height based on Instagram post content
+                embed.onload = function() {
+                    const postHeight = embed.contentWindow.document.body.scrollHeight;
+                    embed.style.height = postHeight + 'px';
+                };
             });
         }
 
