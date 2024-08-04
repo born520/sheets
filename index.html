@@ -28,6 +28,7 @@
         }
         iframe {
             width: 100%;
+            height: 600px; /* 고정 높이 설정 */
             border: none;
         }
     </style>
@@ -54,54 +55,4 @@
         // Render Instagram posts
         async function renderGallery() {
             const data = await fetchData();
-            if (!data || data.length === 0) {
-                console.error('No data found or incorrect data format.');
-                return;
-            }
-
-            const gallery = document.getElementById('gallery');
-
-            data.forEach(item => {
-                const instagramLink = item.link;
-
-                if (!instagramLink || !instagramLink.includes('instagram.com')) {
-                    console.warn('Invalid Instagram URL:', instagramLink);
-                    return;
-                }
-
-                // Create video card
-                const card = document.createElement('div');
-                card.className = 'video-card';
-
-                // Create Instagram embed code
-                const embed = document.createElement('iframe');
-                embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
-                embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
-                embed.allowFullscreen = true;
-                embed.scrolling = "no";
-
-                card.appendChild(embed);
-                gallery.appendChild(card);
-
-                // Adjust iframe height based on Instagram post content
-                embed.onload = function() {
-                    setTimeout(() => {
-                        const postHeight = embed.contentWindow.document.body.scrollHeight;
-                        embed.style.height = postHeight + 'px';
-                    }, 1000);
-                };
-            });
-        }
-
-        // Function to extract Instagram post ID from URL
-        function getInstagramID(url) {
-            const regex = /\/p\/([^\/?]+)/;
-            const match = url.match(regex);
-            return match ? match[1] : '';
-        }
-
-        // Call renderGallery to display the posts
-        renderGallery();
-    </script>
-</body>
-</html>
+            if (!data || data.length ===
