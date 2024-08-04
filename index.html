@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Embed Adjustment</title>
+    <title>Instagram Responsive Grid</title>
     <style>
         body {
             display: flex;
@@ -17,7 +17,7 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Automatically adjust based on screen size */
             grid-gap: 10px;
             width: 100%;
             max-width: 1200px;
@@ -31,17 +31,18 @@
             position: relative;
             box-sizing: border-box;
             background-color: #fff;
+            padding: 10px;
         }
         .instagram-media {
-            width: 100%;
-            height: auto; /* Ensure the height adjusts to the content */
+            width: 100%; /* Ensure media covers the container width */
+            height: auto; /* Adjust height automatically */
             box-sizing: border-box;
         }
 
-        /* Mobile view - 1 column layout */
+        /* Ensure single column on mobile */
         @media (max-width: 768px) {
             .grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* Single column layout for mobile */
             }
         }
     </style>
@@ -53,18 +54,19 @@
 
     <script async src="//www.instagram.com/embed.js"></script>
     <script>
-        // Assuming your script to fetch and inject embeds goes here
+        // Example function to inject Instagram embeds (assuming you have the actual links)
         document.addEventListener('DOMContentLoaded', function() {
-            // Example Instagram post
-            const embedHtml = `
-                <div class="grid-item">
-                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/YourPost/" data-instgrm-version="12"></blockquote>
-                </div>
-            `;
-
+            const urls = ['https://www.instagram.com/p/Example1/', 'https://www.instagram.com/p/Example2/']; // Replace with actual URLs
             const container = document.querySelector('.grid');
-            container.innerHTML = embedHtml;
-            instgrm.Embeds.process(); // This processes all Instagram embed scripts
+            urls.forEach(url => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="12"></blockquote>`;
+                container.appendChild(item);
+            });
+            if (typeof instgrm !== 'undefined') {
+                instgrm.Embeds.process(); // Process all Instagram embeds after adding them
+            }
         });
     </script>
 </body>
