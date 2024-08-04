@@ -40,34 +40,56 @@
         const apiKey = 'AIzaSyCLNlQa8t8VSBiLkDEXIB5B1AW_MkfnOQ8'; // 제공된 Google API 키
 
         // Fetch data from Google Sheets
-        fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/${sheetName}?key=${apiKey}`)
-            .then(response => response.json())
-            .then(data => {
-                const rows = data.values;
-                const gallery = document.getElementById('gallery');
-
-                // Skip header row and iterate over rows
-                for (let i = 1; i < rows.length; i++) {
-                    const instagramLink = rows[i][0]; // Assuming the Instagram link is in the first column
-
-                    // Create embed card
-                    const card = document.createElement('div');
-                    card.className = 'embed-card';
-
-                    // Create Instagram embed code
-                    const embed = document.createElement('iframe');
-                    embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
-                    embed.width = "100%";
-                    embed.height = "480";
-                    embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
-                    embed.allowFullscreen = true;
-                    embed.style.border = "none";
-
-                    card.appendChild(embed);
-                    gallery.appendChild(card);
+        async function fetchData() {
+            try {
+                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/${sheetName}?key=${apiKey}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            })
-            .catch(error => console.error('Error fetching data:', error));
+                const data = await response.json();
+                return data.values;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return null;
+            }
+        }
+
+        // Render Instagram embed links
+        async function renderGallery() {
+            const rows = await fetchData();
+            if (!rows || rows.length < 2) {
+                console.error('No data found or incorrect data format.');
+                return;
+            }
+
+            const gallery = document.getElementById('gallery');
+
+            // Skip header row and iterate over rows
+            for (let i = 1; i < rows.length; i++) {
+                const instagramLink = rows[i][0]; // Assuming the Instagram link is in the first column
+
+                if (!instagramLink || !instagramLink.includes('instagram.com')) {
+                    console.warn('Invalid Instagram URL:', instagramLink);
+                    continue;
+                }
+
+                // Create embed card
+                const card = document.createElement('div');
+                card.className = 'embed-card';
+
+                // Create Instagram embed code
+                const embed = document.createElement('iframe');
+                embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
+                embed.width = "100%";
+                embed.height = "480";
+                embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+                embed.allowFullscreen = true;
+                embed.style.border = "none";
+
+                card.appendChild(embed);
+                gallery.appendChild(card);
+            }
+        }
 
         // Function to extract Instagram post ID from URL
         function getInstagramID(url) {
@@ -75,6 +97,9 @@
             const match = url.match(regex);
             return match ? match[1] : '';
         }
+
+        // Call renderGallery to display the images
+        renderGallery();
     </script>
 </body>
 </html>
