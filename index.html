@@ -11,6 +11,8 @@
             align-items: center;
             flex-direction: column;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         .grid {
             display: grid;
@@ -18,6 +20,8 @@
             grid-gap: 10px;
             width: 80%;
             max-width: 1200px;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .grid-item {
             border: 1px solid #ddd;
@@ -40,12 +44,21 @@
         // Google Sheets API Key and Spreadsheet ID
         const API_KEY = '164f8f23424e682584fec9908c2e748fbf19953c';
         const SPREADSHEET_ID = '1Ykif54vquofU2Hycg-dgmM3pL1U0yVJeUG1wty0oj5w';
-        const RANGE = 'A:A';
+        const RANGE = 'A:A'; // 범위를 A:A로 설정하여 첫 번째 열의 모든 데이터를 가져옵니다.
 
         async function fetchInstagramLinks() {
-            const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${1Ykif54vquofU2Hycg-dgmM3pL1U0yVJeUG1wty0oj5w}/values/${RANGE}?key=${164f8f23424e682584fec9908c2e748fbf19953c}`);
-            const data = await response.json();
-            return data.values.flat();  // Flatten the array
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.values ? data.values.flat() : [];
+            } catch (error) {
+                console.error('API 요청 실패:', error);
+                return [];
+            }
         }
 
         function createInstagramEmbed(url) {
