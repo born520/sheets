@@ -17,12 +17,14 @@
             align-items: center;
             min-height: 100vh;
         }
-        .swiper-container {
+        #gallery-container {
             width: 100%;
             max-width: 800px; /* 최대 너비 설정 */
-            height: auto;
             padding: 20px;
             box-sizing: border-box;
+        }
+        .swiper-container {
+            display: none; /* 기본적으로 숨김 */
         }
         .swiper-slide {
             background-color: white;
@@ -33,25 +35,54 @@
             justify-content: center;
             align-items: center;
         }
+        .normal-gallery .video-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 20px;
+        }
         iframe {
             width: 100%;
             aspect-ratio: 1/1; /* 정사각형 비율 유지 */
             border: none;
-            height: calc(100vw - 40px); /* 화면 너비에 맞게 높이 조정, 패딩 고려 */
+            height: auto;
             max-height: 800px; /* 최대 높이 설정 */
+        }
+        @media (max-width: 768px) {
+            .swiper-container {
+                display: block; /* 모바일에서는 스와이퍼 활성화 */
+            }
+            .normal-gallery {
+                display: none; /* 모바일에서는 숨김 */
+            }
+        }
+        @media (min-width: 769px) {
+            .swiper-container {
+                display: none; /* 데스크톱에서는 스와이퍼 숨김 */
+            }
+            .normal-gallery {
+                display: block; /* 데스크톱에서는 일반 갤러리 표시 */
+            }
         }
     </style>
 </head>
 <body>
-    <div class="swiper-container">
-        <div class="swiper-wrapper" id="gallery">
-            <!-- Slides will be added here dynamically -->
+    <div id="gallery-container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper" id="swiper-gallery">
+                <!-- Slides will be added here dynamically -->
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
+            <!-- Add Navigation -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
-        <!-- Add Pagination -->
-        <div class="swiper-pagination"></div>
-        <!-- Add Navigation -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
+        <div class="normal-gallery" id="normal-gallery">
+            <!-- Normal gallery items will be added here dynamically -->
+        </div>
     </div>
 
     <!-- Swiper JS -->
@@ -68,4 +99,95 @@
                 localStorage.setItem('instagramData', JSON.stringify(data)); // 데이터 캐싱
                 return data;
             } catch (error) {
-                console.error('Error 
+                console.error('Error fetching data:', error);
+                return JSON.parse(localStorage.getItem('instagramData')) || []; // 캐시된 데이터 사용
+            }
+        }
+
+        // Render Instagram posts
+        async function renderGallery() {
+            const swiperGallery = document.getElementById('swiper-gallery');
+            const normalGallery = document.getElementById('normal-gallery');
+
+            const cachedData = JSON.parse(localStorage.getItem('instagramData')) || [];
+            if (cachedData.length > 0) {
+                updateGallery(cachedData);
+            }
+
+            const data = await fetchData();
+            if (!data || data.length === 0) {
+                console.error('No data found or incorrect data format.');
+                swiperGallery.innerHTML = 'No data available';
+                normalGallery.innerHTML = 'No data available';
+                return;
+            }
+
+            updateGallery(data);
+        }
+
+        function updateGallery(data) {
+            const swiperGallery = document.getElementById('swiper-gallery');
+            const normalGallery = document.getElementById('normal-gallery');
+            swiperGallery.innerHTML = ''; // 기존 콘텐츠 제거
+            normalGallery.innerHTML = '';
+
+            // 데이터를 역순으로 정렬하여 최신 항목이 상단에 표시되도록 함
+            data.forEach(item => {
+                const instagramLink = item.link;
+
+                if (!instagramLink || !instagramLink.includes('instagram.com')) {
+                    console.warn('Invalid Instagram URL:', instagramLink);
+                    return;
+                }
+
+                // Create swiper slide
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+
+                // Create Instagram embed code
+                const embed = document.createElement('iframe');
+                embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
+                embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
+                embed.allowFullscreen = true;
+                embed.scrolling = "no";
+
+                slide.appendChild(embed);
+                swiperGallery.prepend(slide); // 최신 항목을 위로 추가
+
+                // Create normal video card
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.appendChild(embed.cloneNode(true)); // 동일한 embed를 복제하여 추가
+
+                normalGallery.prepend(card); // 최신 항목을 위로 추가
+            });
+
+            // Initialize Swiper after slides are added
+            new Swiper('.swiper-container', {
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                slidesPerView: 1, // 한 번에 하나의 슬라이드
+                centeredSlides: true, // 슬라이드를 화면 중앙에 배치
+                spaceBetween: 0, // 슬라이드 사이의 간격
+            });
+        }
+
+        // Function to extract Instagram post ID from URL
+        function getInstagramID(url) {
+            const regex = /\/p\/([^\/?]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : '';
+        }
+
+        // Call renderGallery to display the posts
+        renderGallery();
+    </script>
+</body>
+</html>
