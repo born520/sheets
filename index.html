@@ -16,7 +16,7 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             grid-gap: 10px;
             width: 80%;
             max-width: 1200px;
@@ -28,15 +28,14 @@
             border-radius: 5px;
             overflow: hidden;
             position: relative;
+            box-sizing: border-box;
+            padding: 10px;
         }
         .instagram-media {
             width: 100%;
-        }
-        /* "프로필 보기" 버튼 크기 조정 */
-        .instagram-media a[href^="https://www.instagram.com/"] {
-            font-size: 12px !important; /* 글자 크기 조정 */
-            padding: 5px 10px !important; /* 여백 조정 */
-            margin: 0 !important; /* 외부 여백 제거 */
+            max-width: 540px;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
     </style>
     <script async src="https://www.instagram.com/embed.js"></script>
@@ -73,9 +72,7 @@
             container.className = 'grid-item';
             container.innerHTML = `
                 <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="12">
-                    <div>
-                        <a href="${url}" target="_blank">Instagram Post</a>
-                    </div>
+                    <a href="${url}" target="_blank">Instagram Post</a>
                 </blockquote>
             `;
             return container;
