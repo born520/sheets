@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Video Gallery</title>
+    <title>Instagram Gallery</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,9 +29,7 @@
         }
         iframe {
             width: 100%;
-            height: auto;
             border: none;
-            min-height: 400px; /* 기본 높이 설정 */
         }
         @media (max-width: 768px) {
             .video-card {
@@ -59,7 +57,7 @@
             }
         }
 
-        // Render Instagram videos
+        // Render Instagram posts
         async function renderGallery() {
             const data = await fetchData();
             if (!data || data.length === 0) {
@@ -84,6 +82,12 @@
                 // Create Instagram embed code
                 const embed = document.createElement('iframe');
                 embed.src = `https://www.instagram.com/p/${getInstagramID(instagramLink)}/embed`;
+                embed.onload = function() {
+                    // Set iframe height based on content height
+                    setTimeout(() => {
+                        embed.style.height = embed.contentWindow.document.body.scrollHeight + 'px';
+                    }, 1000);
+                };
                 embed.allow = "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";
                 embed.allowFullscreen = true;
 
@@ -99,7 +103,7 @@
             return match ? match[1] : '';
         }
 
-        // Call renderGallery to display the videos
+        // Call renderGallery to display the posts
         renderGallery();
     </script>
 </body>
