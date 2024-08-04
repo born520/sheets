@@ -27,9 +27,17 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             overflow: hidden;
+            position: relative;
         }
         .instagram-media {
             width: 100%;
+        }
+        /* 프로필 보기, 댓글 달기 등의 텍스트를 숨기기 위한 스타일 */
+        .instagram-media a[href^="https://www.instagram.com/p/"] {
+            display: none !important;
+        }
+        .instagram-media a[href^="https://www.instagram.com/accounts/"] {
+            display: none !important;
         }
     </style>
     <script async src="https://www.instagram.com/embed.js"></script>
